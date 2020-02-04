@@ -1,7 +1,7 @@
 #https://realpython.com/arduino-python/
 #https://github.com/tino/pyFirmata#usage
 
-from tkinter import Label, Button, Radiobutton, messagebox, DISABLED, OptionMenu, BOTTOM, X, SUNKEN, W, Entry
+from tkinter import Label, Button, Radiobutton, messagebox, Checkbutton, DISABLED, OptionMenu, BOTTOM, X, SUNKEN, W, Entry
 
 import tkinter as tk
 import sys, pyfirmata, threading, time, os
@@ -49,6 +49,10 @@ class GUI_COntroller(tk.Frame):
         self.dig_pin12 = tk.IntVar()
         self.dig_pin13_prev_status = tk.IntVar()
         self.dig_pin13 = tk.IntVar()
+
+        self.CheckVar1 = tk.IntVar()
+        self.CheckVar2 = tk.IntVar()
+
         self.syncArdinoDigiPinsWithGUI = None
 
         self.analog_pin0_reading = None
@@ -93,6 +97,8 @@ class GUI_COntroller(tk.Frame):
         self.dig_pin12_radio_off_status = None
         self.dig_pin13_radio_status = None
         self.dig_pin13_radio_off_status = None
+        self.allDigONButton = None
+        self.allDigOFFButton = None
 
         self.digital_pin0_output = 0
         self.digital_pin1_output = 0
@@ -125,163 +131,180 @@ class GUI_COntroller(tk.Frame):
         dig_pin_status_label.config(font=('helvetica', 15, 'bold'))
 
         # DIGITAL PIN0
-        self.dig_pin0_label = Label(TkObject_ref, text="DIGITAL Pin #0 : ", background="#b7bbc7")
-        self.dig_pin0_label.place(x=50, y=130)
-        self.dig_pin0_label.config(font=('helvetica', 10, 'bold'), state = DISABLED)
+        # self.dig_pin0_label = Label(TkObject_ref, text="DIGITAL Pin #0 : ", background="#b7bbc7")
+        # self.dig_pin0_label.place(x=50, y=130)
+        # self.dig_pin0_label.config(font=('helvetica', 10, 'bold'), state = DISABLED)
 
-        self.dig_pin0_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin0, value=1, command=self.writeToBoard)
-        self.dig_pin0_radio_status.place(x=200, y=130)
+        # self.dig_pin0_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin0, value=1, command=self.writeToBoard)
+        # self.dig_pin0_radio_status.place(x=200, y=130)
 
-        self.dig_pin0_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin0, value=0, command=self.writeToBoard)
-        self.dig_pin0_radio_off_status.place(x=250, y=130)
+        # self.dig_pin0_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin0, value=0, command=self.writeToBoard)
+        # self.dig_pin0_radio_off_status.place(x=250, y=130)
 
         # DIGITAL PIN1
-        self.dig_pin1_label = Label(TkObject_ref, text="DIGITAL Pin #1 : ", background="#b7bbc7")
-        self.dig_pin1_label.place(x=50, y=160)
-        self.dig_pin1_label.config(font=('helvetica', 10, 'bold'), state = DISABLED)
+        # self.dig_pin1_label = Label(TkObject_ref, text="DIGITAL Pin #1 : ", background="#b7bbc7")
+        # self.dig_pin1_label.place(x=50, y=160)
+        # self.dig_pin1_label.config(font=('helvetica', 10, 'bold'), state = DISABLED)
 
-        self.dig_pin1_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin1, value=1, command=self.writeToBoard)
-        self.dig_pin1_radio_status.place(x=200, y=160)
+        # self.dig_pin1_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin1, value=1, command=self.writeToBoard)
+        # self.dig_pin1_radio_status.place(x=200, y=160)
 
-        self.dig_pin1_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin1, value=0, command=self.writeToBoard)
-        self.dig_pin1_radio_off_status.place(x=250, y=160)
+        # self.dig_pin1_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin1, value=0, command=self.writeToBoard)
+        # self.dig_pin1_radio_off_status.place(x=250, y=160)
 
         # DIGITAL PIN2
-        self.dig_pin2_label = Label(TkObject_ref, text="DIGITAL Pin #2 : ", background="#b7bbc7")
-        self.dig_pin2_label.place(x=50, y=190)
+        self.dig_pin2_label = Label(TkObject_ref, text="DIGITAL Pin #1 : ", background="#b7bbc7")
+        self.dig_pin2_label.place(x=50, y=150)
         self.dig_pin2_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin2_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin2, value=1, command=self.writeToBoard)
-        self.dig_pin2_radio_status.place(x=200, y=190)
+        self.dig_pin2_radio_status.place(x=200, y=150)
 
         self.dig_pin2_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin2, value=0, command=self.writeToBoard)
-        self.dig_pin2_radio_off_status.place(x=250, y=190)
+        self.dig_pin2_radio_off_status.place(x=250, y=150)
 
         # DIGITAL PIN3
-        self.dig_pin3_label = Label(TkObject_ref, text="DIGITAL Pin #3 : ", background="#b7bbc7")
-        self.dig_pin3_label.place(x=50, y=220)
+        self.dig_pin3_label = Label(TkObject_ref, text="DIGITAL Pin #2 : ", background="#b7bbc7")
+        self.dig_pin3_label.place(x=50, y=180)
         self.dig_pin3_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin3_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin3, value=1, command=self.writeToBoard)
-        self.dig_pin3_radio_status.place(x=200, y=220)
+        self.dig_pin3_radio_status.place(x=200, y=180)
 
         self.dig_pin3_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin3, value=0, command=self.writeToBoard)
-        self.dig_pin3_radio_off_status.place(x=250, y=220)
+        self.dig_pin3_radio_off_status.place(x=250, y=180)
 
         # DIGITAL PIN4
-        self.dig_pin4_label = Label(TkObject_ref, text="DIGITAL Pin #4 : ", background="#b7bbc7")
-        self.dig_pin4_label.place(x=50, y=250)
+        self.dig_pin4_label = Label(TkObject_ref, text="DIGITAL Pin #3 : ", background="#b7bbc7")
+        self.dig_pin4_label.place(x=50, y=210)
         self.dig_pin4_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin4_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin4, value=1, command=self.writeToBoard)
-        self.dig_pin4_radio_status.place(x=200, y=250)
+        self.dig_pin4_radio_status.place(x=200, y=210)
 
         self.dig_pin4_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin4, value=0, command=self.writeToBoard)
-        self.dig_pin4_radio_off_status.place(x=250, y=250)
+        self.dig_pin4_radio_off_status.place(x=250, y=210)
 
         # DIGITAL PIN5
-        self.dig_pin5_label = Label(TkObject_ref, text="DIGITAL Pin #5 : ", background="#b7bbc7")
-        self.dig_pin5_label.place(x=50, y=280)
+        self.dig_pin5_label = Label(TkObject_ref, text="DIGITAL Pin #4 : ", background="#b7bbc7")
+        self.dig_pin5_label.place(x=50, y=240)
         self.dig_pin5_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin5_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin5, value=1, command=self.writeToBoard)
-        self.dig_pin5_radio_status.place(x=200, y=280)
+        self.dig_pin5_radio_status.place(x=200, y=240)
 
         self.dig_pin5_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin5, value=0, command=self.writeToBoard)
-        self.dig_pin5_radio_off_status.place(x=250, y=280)
+        self.dig_pin5_radio_off_status.place(x=250, y=240)
 
         # DIGITAL PIN6
-        self.dig_pin6_label = Label(TkObject_ref, text="DIGITAL Pin #6 : ", background="#b7bbc7")
-        self.dig_pin6_label.place(x=50, y=310)
+        self.dig_pin6_label = Label(TkObject_ref, text="DIGITAL Pin #5 : ", background="#b7bbc7")
+        self.dig_pin6_label.place(x=50, y=270)
         self.dig_pin6_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin6_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin6, value=1, command=self.writeToBoard)
-        self.dig_pin6_radio_status.place(x=200, y=310)
+        self.dig_pin6_radio_status.place(x=200, y=270)
 
         self.dig_pin6_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin6, value=0, command=self.writeToBoard)
-        self.dig_pin6_radio_off_status.place(x=250, y=310)
+        self.dig_pin6_radio_off_status.place(x=250, y=270)
 
         # DIGITAL PIN7
-        self.dig_pin7_label = Label(TkObject_ref, text="DIGITAL Pin #7 : ", background="#b7bbc7")
-        self.dig_pin7_label.place(x=50, y=340)
+        self.dig_pin7_label = Label(TkObject_ref, text="DIGITAL Pin #6 : ", background="#b7bbc7")
+        self.dig_pin7_label.place(x=50, y=300)
         self.dig_pin7_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin7_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin7, value=1, command=self.writeToBoard)
-        self.dig_pin7_radio_status.place(x=200, y=340)
+        self.dig_pin7_radio_status.place(x=200, y=300)
 
         self.dig_pin7_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin7, value=0, command=self.writeToBoard)
-        self.dig_pin7_radio_off_status.place(x=250, y=340)
+        self.dig_pin7_radio_off_status.place(x=250, y=300)
 
         # DIGITAL PIN8
-        self.dig_pin8_label = Label(TkObject_ref, text="DIGITAL Pin #8 : ", background="#b7bbc7")
-        self.dig_pin8_label.place(x=50, y=370)
+        self.dig_pin8_label = Label(TkObject_ref, text="DIGITAL Pin #7 : ", background="#b7bbc7")
+        self.dig_pin8_label.place(x=50, y=330)
         self.dig_pin8_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin8_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin8, value=1, command=self.writeToBoard)
-        self.dig_pin8_radio_status.place(x=200, y=370)
+        self.dig_pin8_radio_status.place(x=200, y=330)
 
         self.dig_pin8_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin8, value=0, command=self.writeToBoard)
-        self.dig_pin8_radio_off_status.place(x=250, y=370)
+        self.dig_pin8_radio_off_status.place(x=250, y=330)
 
         # DIGITAL PIN9
-        self.dig_pin9_label = Label(TkObject_ref, text="DIGITAL Pin #9 : ", background="#b7bbc7")
-        self.dig_pin9_label.place(x=50, y=400)
+        self.dig_pin9_label = Label(TkObject_ref, text="DIGITAL Pin #8 : ", background="#b7bbc7")
+        self.dig_pin9_label.place(x=50, y=360)
         self.dig_pin9_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin9_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin9, value=1, command=self.writeToBoard)
-        self.dig_pin9_radio_status.place(x=200, y=400)
+        self.dig_pin9_radio_status.place(x=200, y=360)
 
         self.dig_pin9_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin9, value=0, command=self.writeToBoard)
-        self.dig_pin9_radio_off_status.place(x=250, y=400)
+        self.dig_pin9_radio_off_status.place(x=250, y=360)
 
         # DIGITAL PIN10
-        self.dig_pin10_label = Label(TkObject_ref, text="DIGITAL Pin #10 : ", background="#b7bbc7")
-        self.dig_pin10_label.place(x=50, y=430)
+        self.dig_pin10_label = Label(TkObject_ref, text="DIGITAL Pin #9 : ", background="#b7bbc7")
+        self.dig_pin10_label.place(x=50, y=390)
         self.dig_pin10_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin10_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin10, value=1, command=self.writeToBoard)
-        self.dig_pin10_radio_status.place(x=200, y=430)
+        self.dig_pin10_radio_status.place(x=200, y=390)
 
         self.dig_pin10_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin10, value=0, command=self.writeToBoard)
-        self.dig_pin10_radio_off_status.place(x=250, y=430)
+        self.dig_pin10_radio_off_status.place(x=250, y=390)
 
         # DIGITAL PIN11
-        self.dig_pin11_label = Label(TkObject_ref, text="DIGITAL Pin #11 : ", background="#b7bbc7")
-        self.dig_pin11_label.place(x=50, y=460)
+        self.dig_pin11_label = Label(TkObject_ref, text="DIGITAL Pin #10 : ", background="#b7bbc7")
+        self.dig_pin11_label.place(x=50, y=420)
         self.dig_pin11_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin11_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin11, value=1, command=self.writeToBoard)
-        self.dig_pin11_radio_status.place(x=200, y=460)
+        self.dig_pin11_radio_status.place(x=200, y=420)
 
         self.dig_pin11_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin11, value=0, command=self.writeToBoard)
-        self.dig_pin11_radio_off_status.place(x=250, y=460)
+        self.dig_pin11_radio_off_status.place(x=250, y=420)
 
         # DIGITAL PIN12
-        self.dig_pin12_label = Label(TkObject_ref, text="DIGITAL Pin #12 : ", background="#b7bbc7")
-        self.dig_pin12_label.place(x=50, y=490)
+        self.dig_pin12_label = Label(TkObject_ref, text="DIGITAL Pin #11 : ", background="#b7bbc7")
+        self.dig_pin12_label.place(x=50, y=450)
         self.dig_pin12_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin12_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin12, value=1, command=self.writeToBoard)
-        self.dig_pin12_radio_status.place(x=200, y=490)
+        self.dig_pin12_radio_status.place(x=200, y=450)
 
         self.dig_pin12_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin12, value=0, command=self.writeToBoard)
-        self.dig_pin12_radio_off_status.place(x=250, y=490)
+        self.dig_pin12_radio_off_status.place(x=250, y=450)
 
         # DIGITAL PIN13
-        self.dig_pin13_label = Label(TkObject_ref, text="DIGITAL Pin #13 : ", background="#b7bbc7")
-        self.dig_pin13_label.place(x=50, y=520)
+        self.dig_pin13_label = Label(TkObject_ref, text="DIGITAL Pin #12 : ", background="#b7bbc7")
+        self.dig_pin13_label.place(x=50, y=480)
         self.dig_pin13_label.config(font=('helvetica', 10, 'bold'))
 
         self.dig_pin13_radio_status = Radiobutton(TkObject_ref, text="ON", background="#b7bbc7", variable=self.dig_pin13, value=1, command=self.writeToBoard)
-        self.dig_pin13_radio_status.place(x=200, y=520)
+        self.dig_pin13_radio_status.place(x=200, y=480)
 
         self.dig_pin13_radio_off_status = Radiobutton(TkObject_ref, text="OFF", background="#b7bbc7", variable=self.dig_pin13, value=0, command=self.writeToBoard)
-        self.dig_pin13_radio_off_status.place(x=250, y=520)
+        self.dig_pin13_radio_off_status.place(x=250, y=480)
 
         self.syncArdinoDigiPinsWithGUI = Button(TkObject_ref, activebackground='red', background='red', borderwidth=4, height=5, text='CLICK HERE TO SYNC WITH ARDUINO BOARD',
                              command=self.syncWithAurdino)
         self.syncArdinoDigiPinsWithGUI.place(x=880, y=200)
         self.syncArdinoDigiPinsWithGUI.config(font=('helvetica', 11, 'bold'))
+
+        # DIGITAL PIN13
+        self.digiTurnON = Label(TkObject_ref, text="TURN ON: ", background="#b7bbc7")
+        self.digiTurnON.place(x=50, y=540)
+        self.digiTurnON.config(font=('helvetica', 12, 'bold'))
+
+        # Set all Dig Pin ON
+        self.allDigONButton = Checkbutton(TkObject_ref, activebackground='green', borderwidth=2, text='ALL',
+                             command=self.allDigON, variable=self.CheckVar1)
+        self.allDigONButton.place(x=190, y=540)
+        self.allDigONButton.config(font=('helvetica', 9, 'bold'), state=DISABLED)
+
+        # Set all Dig Pin OFF
+        self.allDigOFFButton = Checkbutton(TkObject_ref, activebackground='green', borderwidth=2, text='NONE',
+                             command=self.allDigOFF, variable=self.CheckVar2)
+        self.allDigOFFButton.place(x=250, y=540)
+        self.allDigOFFButton.config(font=('helvetica', 9, 'bold'), state=DISABLED)
 
         # Exit Window
         closeButton = Button(TkObject_ref, activebackground='green', borderwidth=4, text='Close Window',
@@ -296,7 +319,7 @@ class GUI_COntroller(tk.Frame):
         self.analogDesignOnUI()
 
         #Disable Dig 0 and 1 bits as they used for Tx and Rx
-        self.disabledDigBit0Bit1()
+        #self.disabledDigBit0Bit1()
 
         # ConfigureListBox
         self.configureListoxForSerialPort()
@@ -304,58 +327,58 @@ class GUI_COntroller(tk.Frame):
     def analogDesignOnUI(self):
         # DIGITAL PIN0
         analog_pin0_label = Label(TkObject_ref, text="Analog Pin #0 : ", background="#b7bbc7")
-        analog_pin0_label.place(x=400, y=130)
+        analog_pin0_label.place(x=400, y=190)
         analog_pin0_label.config(font=('helvetica', 10, 'bold'))
 
         self.analog_pin0_reading = tk.StringVar()
         analog_pin0_Entry= Entry(TkObject_ref, width=10, textvariable=self.analog_pin0_reading, bd=1)
-        analog_pin0_Entry.place(x=520,y=130)
+        analog_pin0_Entry.place(x=520,y=190)
         analog_pin0_Entry.config(font=('helvetica',10), state="readonly")
 
         analog_pin1_label = Label(TkObject_ref, text="Analog Pin #1 : ", background="#b7bbc7")
-        analog_pin1_label.place(x=400, y=160)
+        analog_pin1_label.place(x=400, y=220)
         analog_pin1_label.config(font=('helvetica', 10, 'bold'))
 
         self.analog_pin1_reading = tk.StringVar()
         analog_pin1_Entry= Entry(TkObject_ref, width=10, textvariable=self.analog_pin1_reading, bd=1)
-        analog_pin1_Entry.place(x=520,y=160)
+        analog_pin1_Entry.place(x=520,y=220)
         analog_pin1_Entry.config(font=('helvetica',10), state="readonly")
 
         analog_pin2_label = Label(TkObject_ref, text="Analog Pin #2 : ", background="#b7bbc7")
-        analog_pin2_label.place(x=400, y=190)
+        analog_pin2_label.place(x=400, y=250)
         analog_pin2_label.config(font=('helvetica', 10, 'bold'))
 
         self.analog_pin2_reading = tk.StringVar()
         analog_pin2_Entry= Entry(TkObject_ref, width=10, textvariable=self.analog_pin2_reading, bd=1)
-        analog_pin2_Entry.place(x=520,y=190)
+        analog_pin2_Entry.place(x=520,y=250)
         analog_pin2_Entry.config(font=('helvetica',10), state="readonly")
 
         analog_pin3_label = Label(TkObject_ref, text="Analog Pin #3 : ", background="#b7bbc7")
-        analog_pin3_label.place(x=400, y=220)
+        analog_pin3_label.place(x=400, y=280)
         analog_pin3_label.config(font=('helvetica', 10, 'bold'))
 
         self.analog_pin3_reading = tk.StringVar()
         analog_pin3_Entry= Entry(TkObject_ref, width=10, textvariable=self.analog_pin3_reading, bd=1)
-        analog_pin3_Entry.place(x=520,y=220)
+        analog_pin3_Entry.place(x=520,y=280)
         analog_pin3_Entry.config(font=('helvetica',10), state="readonly")
 
         analog_pin4_label = Label(TkObject_ref, text="Analog Pin #4 : ", background="#b7bbc7")
-        analog_pin4_label.place(x=400, y=250)
-        analog_pin4_label.config(font=('helvetica', 10, 'bold'), state = DISABLED)
+        analog_pin4_label.place(x=400, y=310)
+        analog_pin4_label.config(font=('helvetica', 10, 'bold'))
 
         self.analog_pin4_reading = tk.StringVar()
         analog_pin4_Entry= Entry(TkObject_ref, width=10, textvariable=self.analog_pin4_reading, bd=1)
-        analog_pin4_Entry.place(x=520,y=250)
-        analog_pin4_Entry.config(font=('helvetica',10), state = DISABLED)
+        analog_pin4_Entry.place(x=520,y=310)
+        analog_pin4_Entry.config(font=('helvetica',10), state="readonly")
 
         analog_pin5_label = Label(TkObject_ref, text="Analog Pin #5 : ", background="#b7bbc7")
-        analog_pin5_label.place(x=400, y=280)
-        analog_pin5_label.config(font=('helvetica', 10, 'bold'), state = DISABLED)
+        analog_pin5_label.place(x=400, y=340)
+        analog_pin5_label.config(font=('helvetica', 10, 'bold'))
 
         self.analog_pin5_reading = tk.StringVar()
         analog_pin5_Entry= Entry(TkObject_ref, width=10, textvariable=self.analog_pin5_reading, bd=1)
-        analog_pin5_Entry.place(x=520,y=280)
-        analog_pin5_Entry.config(font=('helvetica',10), state = DISABLED)
+        analog_pin5_Entry.place(x=520,y=340)
+        analog_pin5_Entry.config(font=('helvetica',10), state="readonly")
 
 
     def configureListoxForSerialPort(self):
@@ -389,6 +412,36 @@ class GUI_COntroller(tk.Frame):
         self.dig_pin1_radio_status.config(state = DISABLED)
         self.dig_pin1_radio_off_status.config(state = DISABLED)
 
+    def allDigON(self):
+        self.CheckVar2.set(0)
+        self.setDigBitColor(self.dig_pin2, self.dig_pin2_prev_status, self.dig_pin2_radio_status, self.dig_pin2_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin3, self.dig_pin3_prev_status, self.dig_pin3_radio_status, self.dig_pin3_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin4, self.dig_pin4_prev_status, self.dig_pin4_radio_status, self.dig_pin4_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin5, self.dig_pin5_prev_status, self.dig_pin5_radio_status, self.dig_pin5_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin6, self.dig_pin6_prev_status, self.dig_pin6_radio_status, self.dig_pin6_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin7, self.dig_pin7_prev_status, self.dig_pin7_radio_status, self.dig_pin7_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin8, self.dig_pin8_prev_status, self.dig_pin8_radio_status, self.dig_pin8_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin9, self.dig_pin9_prev_status, self.dig_pin9_radio_status, self.dig_pin9_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin10, self.dig_pin10_prev_status, self.dig_pin10_radio_status, self.dig_pin10_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin11, self.dig_pin11_prev_status, self.dig_pin11_radio_status, self.dig_pin11_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin12, self.dig_pin12_prev_status, self.dig_pin12_radio_status, self.dig_pin12_radio_off_status, 1, True)
+        self.setDigBitColor(self.dig_pin13, self.dig_pin13_prev_status, self.dig_pin13_radio_status, self.dig_pin13_radio_off_status, 1, True)
+
+    def allDigOFF(self):
+        self.CheckVar1.set(0)
+        self.setDigBitColor(self.dig_pin2, self.dig_pin2_prev_status, self.dig_pin2_radio_status, self.dig_pin2_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin3, self.dig_pin3_prev_status, self.dig_pin3_radio_status, self.dig_pin3_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin4, self.dig_pin4_prev_status, self.dig_pin4_radio_status, self.dig_pin4_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin5, self.dig_pin5_prev_status, self.dig_pin5_radio_status, self.dig_pin5_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin6, self.dig_pin6_prev_status, self.dig_pin6_radio_status, self.dig_pin6_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin7, self.dig_pin7_prev_status, self.dig_pin7_radio_status, self.dig_pin7_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin8, self.dig_pin8_prev_status, self.dig_pin8_radio_status, self.dig_pin8_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin9, self.dig_pin9_prev_status, self.dig_pin9_radio_status, self.dig_pin9_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin10, self.dig_pin10_prev_status, self.dig_pin10_radio_status, self.dig_pin10_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin11, self.dig_pin11_prev_status, self.dig_pin11_radio_status, self.dig_pin11_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin12, self.dig_pin12_prev_status, self.dig_pin12_radio_status, self.dig_pin12_radio_off_status, 0, True)
+        self.setDigBitColor(self.dig_pin13, self.dig_pin13_prev_status, self.dig_pin13_radio_status, self.dig_pin13_radio_off_status, 0, True)
+
     def exitWindow(self):
         TkObject_ref.destroy()
         return
@@ -419,14 +472,12 @@ class GUI_COntroller(tk.Frame):
         if val is None:
             analogTextBox.set("None")
         else:
-            analogTextBox.set(int(val))
+            analogTextBox.set(val)
 
     def digPinStatus(self,Digpin):
-        dig_pin = 0
-        if self.digital_pin2_output.read() is None:
+        dig_pin = Digpin
+        if Digpin is None:
             dig_pin = 0
-        else:
-            dig_pin = 1
         return dig_pin
 
     #This function reads board pins objects once on starting of program
@@ -436,7 +487,9 @@ class GUI_COntroller(tk.Frame):
             messagebox.showerror("Error","No Comport selected/identfied for arduino board, please try again")
             self.initSuccess = False
             self.syncWithBoardOnce = False
-        else:
+        elif self.initSuccess is False:
+                self.dig_pin2_prev_status.set(0)
+
                 self.statusBarText.set("Please wait syncing with Arduino board...")
                 port = self.pickComPortNum(self.selectedCommPort.get())
 
@@ -473,6 +526,7 @@ class GUI_COntroller(tk.Frame):
                 #                    self.dig_pin0_radio_off_status, int(self.digital_pin0_input.read()), True)
                 #self.setDigBitColor(self.dig_pin1, self.dig_pin1_prev_status, self.dig_pin1_radio_status,
                 #                    self.dig_pin1_radio_off_status, int(self.digital_pin1_input.read()), True)
+
                 self.setDigBitColor(self.dig_pin2, self.dig_pin2_prev_status, self.dig_pin2_radio_status,
                                     self.dig_pin2_radio_off_status, self.digPinStatus(self.digital_pin2_output.read()), True)
                 self.setDigBitColor(self.dig_pin3, self.dig_pin3_prev_status, self.dig_pin3_radio_status,
@@ -511,6 +565,9 @@ class GUI_COntroller(tk.Frame):
                 self.syncArdinoDigiPinsWithGUI.config(bg="Green", text="ARDUINO BOARD IN SYNC WITH GUI\n(Click Again to read pins status)")
                 self.statusBarText.set("UI synced with Arduino board.")
 
+                self.allDigOFFButton.config(state="normal")
+                self.allDigONButton.config(state="normal")
+
     def keepReadingDigiBitsForEver(self):
 
             # Iteratively keep reading digi bits from board and set corrosponding bits on GUI if there a change
@@ -523,51 +580,51 @@ class GUI_COntroller(tk.Frame):
             #    self.setDigBitColor(self.dig_pin1, self.dig_pin1_prev_status, self.dig_pin1_radio_status,
             #                        self.dig_pin1_radio_off_status, int(self.digital_pin1_output.read()), True)
 
-            if self.dig_pin2_prev_status != self.digPinStatus(self.digital_pin2_output.read()):
+            if self.dig_pin2_prev_status.get() != self.digPinStatus(self.digital_pin2_output.read()):
                 self.setDigBitColor(self.dig_pin2, self.dig_pin2_prev_status, self.dig_pin2_radio_status,
-                                    self.dig_pin2_radio_off_status, self.digPinStatus(self.digital_pin2_output.read()), True)
+                                        self.dig_pin2_radio_off_status, self.digPinStatus(self.digital_pin2_output.read()), True)
 
-            if self.dig_pin3_prev_status != self.digPinStatus(self.digital_pin3_output.read()):
+            if self.dig_pin3_prev_status.get() != self.digPinStatus(self.digital_pin3_output.read()):
                 self.setDigBitColor(self.dig_pin3, self.dig_pin3_prev_status, self.dig_pin3_radio_status,
                                     self.dig_pin3_radio_off_status, self.digPinStatus(self.digital_pin3_output.read()), True)
 
-            if self.dig_pin4_prev_status != self.digPinStatus(self.digital_pin4_output.read()):
+            if self.dig_pin4_prev_status.get() != self.digPinStatus(self.digital_pin4_output.read()):
                 self.setDigBitColor(self.dig_pin4, self.dig_pin4_prev_status, self.dig_pin4_radio_status,
                                     self.dig_pin4_radio_off_status, self.digPinStatus(self.digital_pin4_output.read()), True)
 
-            if self.dig_pin5_prev_status != self.digPinStatus(self.digital_pin5_output.read()):
+            if self.dig_pin5_prev_status.get() != self.digPinStatus(self.digital_pin5_output.read()):
                 self.setDigBitColor(self.dig_pin5, self.dig_pin5_prev_status, self.dig_pin5_radio_status,
                                     self.dig_pin5_radio_off_status, self.digPinStatus(self.digital_pin5_output.read()), True)
 
-            if self.dig_pin6_prev_status != self.digPinStatus(self.digital_pin6_output.read()):
+            if self.dig_pin6_prev_status.get() != self.digPinStatus(self.digital_pin6_output.read()):
                 self.setDigBitColor(self.dig_pin6, self.dig_pin6_prev_status, self.dig_pin6_radio_status,
                                     self.dig_pin6_radio_off_status, self.digPinStatus(self.digital_pin6_output.read()), True)
 
-            if self.dig_pin7_prev_status != self.digPinStatus(self.digital_pin7_output.read()):
+            if self.dig_pin7_prev_status.get() != self.digPinStatus(self.digital_pin7_output.read()):
                 self.setDigBitColor(self.dig_pin7, self.dig_pin7_prev_status, self.dig_pin7_radio_status,
                                     self.dig_pin7_radio_off_status, self.digPinStatus(self.digital_pin7_output.read()), True)
 
-            if self.dig_pin8_prev_status != self.digPinStatus(self.digital_pin8_output.read()):
+            if self.dig_pin8_prev_status.get() != self.digPinStatus(self.digital_pin8_output.read()):
                 self.setDigBitColor(self.dig_pin8, self.dig_pin8_prev_status, self.dig_pin8_radio_status,
                                     self.dig_pin8_radio_off_status, self.digPinStatus(self.digital_pin8_output.read()), True)
 
-            if self.dig_pin9_prev_status != self.digPinStatus(self.digital_pin9_output.read()):
+            if self.dig_pin9_prev_status.get() != self.digPinStatus(self.digital_pin9_output.read()):
                 self.setDigBitColor(self.dig_pin9, self.dig_pin9_prev_status, self.dig_pin9_radio_status,
                                     self.dig_pin9_radio_off_status, self.digPinStatus(self.digital_pin9_output.read()), True)
 
-            if self.dig_pin10_prev_status != self.digPinStatus(self.digital_pin10_output.read()):
+            if self.dig_pin10_prev_status.get() != self.digPinStatus(self.digital_pin10_output.read()):
                 self.setDigBitColor(self.dig_pin10, self.dig_pin10_prev_status, self.dig_pin10_radio_status,
                                     self.dig_pin10_radio_off_status, self.digPinStatus(self.digital_pin10_output.read()), True)
 
-            if self.dig_pin11_prev_status != self.digPinStatus(self.digital_pin11_output.read()):
+            if self.dig_pin11_prev_status.get() != self.digPinStatus(self.digital_pin11_output.read()):
                 self.setDigBitColor(self.dig_pin11, self.dig_pin11_prev_status, self.dig_pin11_radio_status,
                                     self.dig_pin11_radio_off_status, self.digPinStatus(self.digital_pin11_output.read()), True)
 
-            if self.dig_pin12_prev_status != self.digPinStatus(self.digital_pin12_output.read()):
+            if self.dig_pin12_prev_status.get() != self.digPinStatus(self.digital_pin12_output.read()):
                 self.setDigBitColor(self.dig_pin12, self.dig_pin12_prev_status, self.dig_pin12_radio_status,
                                     self.dig_pin12_radio_off_status, self.digPinStatus(self.digital_pin12_output.read()), True)
 
-            if self.dig_pin13_prev_status != self.digPinStatus(self.digital_pin13_output.read()):
+            if self.dig_pin13_prev_status.get() != self.digPinStatus(self.digital_pin13_output.read()):
                 self.setDigBitColor(self.dig_pin13, self.dig_pin13_prev_status, self.dig_pin13_radio_status,
                                     self.dig_pin13_radio_off_status, self.digPinStatus(self.digital_pin13_output.read()), True)
 

@@ -1,30 +1,17 @@
 import pyfirmata
 import time
+from pyfirmata import INPUT, OUTPUT, PWM
 
 
 print("preprating5")
 board = pyfirmata.Arduino('COM4')
-
-print("preprating3")
-it = pyfirmata.util.Iterator(board)
-it.start()
-
+board.analog[1].mode = OUTPUT
+board.analog[1].write(5)
+time.sleep(2)
 
 
-print("preprating2")
-#ob = board.get_pin('a:2:o')
-#ob.read()
 
-board.analog[2].write(1)
-#Read anf write (dig to Analog)
-ob = board.get_pin('a:2:i')
-while True:
-    board.digital[9].write(1)
-    time.sleep(2)
-    print(ob.read())
-    time.sleep(2)
-    board.digital[9].write(0)
-    time.sleep(2)
+
 
 '''print("preprating3")
 ob = board.get_pin('a:2:i')
